@@ -20,8 +20,8 @@ const mockMovies = [
   { id: 15, title: "The Lion King", year: 1994, genre: "Animation", rating: 8.5, budget: 45, revenue: 968.5, director: "Roger Allers", runtime: 88 },
   { id: 16, title: "Schindler's List", year: 1993, genre: "Biography", rating: 8.9, budget: 22, revenue: 321.2, director: "Steven Spielberg", runtime: 195 },
   { id: 17, title: "Fight Club", year: 1999, genre: "Drama", rating: 8.8, budget: 63, revenue: 100.9, director: "David Fincher", runtime: 139 },
-  { id: 18, title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001, genre: "Adventure", rating: 8.8, budget: 93, revenue: 871.5, director: "Peter Jackson", runtime: 178 },
-  { id: 19, title: "The Lord of the Rings: The Return of the King", year: 2003, genre: "Adventure", rating: 8.9, budget: 94, revenue: 1120.2, director: "Peter Jackson", runtime: 201 },
+  { id: 18, title: "The Lord of the Rings 1", year: 2001, genre: "Adventure", rating: 8.8, budget: 93, revenue: 871.5, director: "Peter Jackson", runtime: 178 },
+  { id: 19, title: "The Lord of the Rings 3", year: 2003, genre: "Adventure", rating: 8.9, budget: 94, revenue: 1120.2, director: "Peter Jackson", runtime: 201 },
   { id: 20, title: "The Good, the Bad and the Ugly", year: 1966, genre: "Western", rating: 8.8, budget: 1.2, revenue: 38.9, director: "Sergio Leone", runtime: 178 },
   { id: 21, title: "Seven Samurai", year: 1954, genre: "Action", rating: 8.6, budget: 0.5, revenue: 3.5, director: "Akira Kurosawa", runtime: 207 },
   { id: 22, title: "City of God", year: 2002, genre: "Crime", rating: 8.6, budget: 3.3, revenue: 30.6, director: "Fernando Meirelles", runtime: 130 },
@@ -44,10 +44,8 @@ const mockMovies = [
   { id: 39, title: "WALL·E", year: 2008, genre: "Animation", rating: 8.4, budget: 180, revenue: 521.3, director: "Andrew Stanton", runtime: 98 },
   { id: 40, title: "American Beauty", year: 1999, genre: "Drama", rating: 8.3, budget: 15, revenue: 356.3, director: "Sam Mendes", runtime: 122 },
   { id: 41, title: "The Social Network", year: 2010, genre: "Biography", rating: 7.7, budget: 40, revenue: 224.9, director: "David Fincher", runtime: 120 },
-  { id: 42, title: "The Grand Budapest Hotel", year: 2014, genre: "Comedy", rating: 8.1, budget: 25, revenue: 172.9, director: "Wes Anderson", runtime: 99 },
   { id: 43, title: "No Country for Old Men", year: 2007, genre: "Crime", rating: 8.1, budget: 25, revenue: 171.6, director: "Coen Brothers", runtime: 122 },
   { id: 44, title: "The Big Lebowski", year: 1998, genre: "Comedy", rating: 8.1, budget: 15, revenue: 46.7, director: "Coen Brothers", runtime: 117 },
-  { id: 45, title: "Eternal Sunshine of the Spotless Mind", year: 2004, genre: "Drama", rating: 8.3, budget: 20, revenue: 74.0, director: "Michel Gondry", runtime: 108 },
   { id: 46, title: "Oldboy", year: 2003, genre: "Action", rating: 8.4, budget: 3.0, revenue: 15.0, director: "Park Chan-wook", runtime: 120 },
   { id: 47, title: "Amélie", year: 2001, genre: "Comedy", rating: 8.3, budget: 10, revenue: 173.9, director: "Jean-Pierre Jeunet", runtime: 122 },
   { id: 48, title: "Taxi Driver", year: 1976, genre: "Crime", rating: 8.2, budget: 1.9, revenue: 28.6, director: "Martin Scorsese", runtime: 114 },
@@ -479,13 +477,20 @@ const MovieExplorerDashboard = () => {
               </div>
             </div>
             <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={budgetRevenueData.slice(budgetChartPage * 10, (budgetChartPage + 1) * 10)}>
+              <BarChart data={budgetRevenueData
+                .sort((a, b) => b.revenue - a.revenue)
+                .slice(budgetChartPage * 10, (budgetChartPage + 1) * 10)}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="title" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  height={120}
+                  angle={0} 
+                  textAnchor="middle" 
+                  height={130}
+                  tick={{
+                    fontSize: 12,
+                    dy: 10,
+                    dx: -5
+                  }}
                 />
                 <YAxis label={{ value: 'Amount (Million $)', angle: -90, position: 'insideLeft' }} />
                 <Tooltip formatter={(value) => `$${value}M`} />
