@@ -40,21 +40,3 @@ npm run dev
 npm run build
 npm run deploy
 ```
-
-## Troubleshooting
-
-### If page shows 404:
-1. Check repository settings → Pages is enabled
-2. Verify `base` in `vite.config.js` matches your repo name
-3. Wait 5-10 minutes for initial deployment
-
-### If styles don't load:
-1. Ensure Tailwind CDN link is in `index.html`
-2. Check browser console for errors
-
-### If build fails:
-1. Ensure all dependencies are in `package.json`
-2. Check Node version (use 16+ for Vite)
-
-Your live demo will be at:
-`https://guilhermeleitao2002.github.io/movie-dashboard/`
