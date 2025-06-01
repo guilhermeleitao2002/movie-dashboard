@@ -364,6 +364,7 @@ const MovieExplorerDashboard = () => {
                   cy="50%"
                   outerRadius={100}
                   label={({genre, count}) => `${genre}: ${count}`}
+                  labelLine={false}
                 >
                   {genreData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
