@@ -80,6 +80,7 @@ const MovieExplorerDashboard = () => {
   const [ratingFilter, setRatingFilter] = useState(8.0);
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 10;
+  const [budgetChartPage, setBudgetChartPage] = useState(0);
 
   const filteredMovies = useMemo(() => {
     return mockMovies.filter(movie => {
@@ -443,12 +444,51 @@ const MovieExplorerDashboard = () => {
           {/* Budget vs Revenue */}
           <div className="bg-white rounded-lg shadow-lg p-6 lg:col-span-2">
             <h2 className="text-xl font-bold mb-4 text-gray-800">Budget vs Revenue Analysis</h2>
+            {/* Chart navigation controls */}
+            <div className="flex justify-end mb-2">
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-500">
+                  Showing {budgetChartPage * 10 + 1}-{Math.min((budgetChartPage + 1) * 10, budgetRevenueData.length)} of {budgetRevenueData.length}
+                </span>
+                <div className="flex space-x-2">
+                  <button 
+                    onClick={() => setBudgetChartPage(prev => Math.max(0, prev - 1))}
+                    disabled={budgetChartPage === 0}
+                    className={`p-2 rounded-full ${budgetChartPage === 0 
+                      ? 'text-gray-400 cursor-not-allowed' 
+                      : 'text-blue-600 hover:bg-blue-100'}`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  
+                  <button 
+                    onClick={() => setBudgetChartPage(prev => prev + 1)}
+                    disabled={budgetChartPage >= Math.floor(budgetRevenueData.length / 10)}
+                    className={`p-2 rounded-full ${
+                      budgetChartPage >= Math.floor(budgetRevenueData.length / 10)
+                        ? 'text-gray-400 cursor-not-allowed' 
+                        : 'text-blue-600 hover:bg-blue-100'}`}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
             <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={budgetRevenueData}>
+              <BarChart data={budgetRevenueData.slice(budgetChartPage * 10, (budgetChartPage + 1) * 10)}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="title" angle={-45} textAnchor="end" height={100} />
+                <XAxis 
+                  dataKey="title" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={120}
+                />
                 <YAxis label={{ value: 'Amount (Million $)', angle: -90, position: 'insideLeft' }} />
-                <Tooltip />
+                <Tooltip formatter={(value) => `$${value}M`} />
                 <Legend />
                 <Bar dataKey="budget" fill="#dc2626" name="Budget" />
                 <Bar dataKey="revenue" fill="#10b981" name="Revenue" />
