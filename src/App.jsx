@@ -334,14 +334,30 @@ const MovieExplorerDashboard = () => {
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-800">Rating vs Runtime</h2>
             <ResponsiveContainer width="100%" height={300}>
-              <ScatterChart>
+              <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="x" name="Runtime" unit=" min" />
-                <YAxis dataKey="y" name="Rating" domain={[8, 10]} />
-                <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                <XAxis 
+                  dataKey="x" 
+                  name="Runtime" 
+                  unit=" min" 
+                  type="number" 
+                  domain={['dataMin-10', 'dataMax+10']}
+                  tickCount={8}
+                />
+                <YAxis 
+                  dataKey="y" 
+                  name="Rating" 
+                  domain={[7, 10]} 
+                  tickCount={7}
+                />
+                <Tooltip 
+                  cursor={{ strokeDasharray: '3 3' }}
+                  formatter={(value, name) => [value, name === "y" ? "Rating" : "Runtime (min)"]}
+                  labelFormatter={(value) => `Movie: ${value}`}
+                />
                 <Scatter 
                   name="Movies" 
-                  data={ratingRuntimeData} 
+                  data={ratingRuntimeData.sort((a, b) => a.x - b.x)} 
                   fill="#2563eb"
                   onClick={(data) => {
                     const movie = filteredMovies.find(m => m.title === data.title);
