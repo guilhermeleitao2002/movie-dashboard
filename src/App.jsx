@@ -249,7 +249,7 @@ const MovieExplorerDashboard = () => {
               min="1970" 
               max="2025" 
               value={yearRange[0]}
-              onChange={(e) => setYearRange([yearRange[1], parseInt(e.target.value)])}
+              onChange={(e) => setYearRange([parseInt(e.target.value), yearRange[1]])}
               className="w-full"
             />
           </div>
