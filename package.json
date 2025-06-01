@@ -7,14 +7,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "recharts": "^2.12.0",
-    "lucide-react": "^0.263.1"
+    "lucide-react": "^0.263.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.15.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
-    "vite": "^5.0.0"
+    "@vitejs/plugin-react": "^4.5.0",
+    "vite": "^5.4.19"
   },
   "description": "Movie Analytics Dashboard with Ratings and Trend Analysis",
   "main": "vite.config.js",
