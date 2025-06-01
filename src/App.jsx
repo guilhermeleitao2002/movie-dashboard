@@ -60,15 +60,14 @@ const mockMovies = [
   { id: 55, title: "Get Out", year: 2017, genre: "Horror", rating: 7.7, budget: 4.5, revenue: 255.4, director: "Jordan Peele", runtime: 104 },
   { id: 56, title: "Joker", year: 2019, genre: "Crime", rating: 8.4, budget: 55, revenue: 1074.3, director: "Todd Phillips", runtime: 122 },
   { id: 57, title: "1917", year: 2019, genre: "War", rating: 8.3, budget: 95, revenue: 384.6, director: "Sam Mendes", runtime: 119 },
-  { id: 58, title: "Parasite", year: 2019, genre: "Thriller", rating: 8.6, budget: 11.4, revenue: 258.7, director: "Bong Joon-ho", runtime: 132 },
+  { id: 58, title: "Barbie", year: 2023, genre: "Comedy", rating: 7.0, budget: 145, revenue: 1446.2, director: "Greta Gerwig", runtime: 114 },
   { id: 59, title: "Tenet", year: 2020, genre: "Action", rating: 7.5, budget: 200, revenue: 363.7, director: "Christopher Nolan", runtime: 150 },
   { id: 60, title: "Nomadland", year: 2020, genre: "Drama", rating: 7.3, budget: 5, revenue: 39.4, director: "Chloé Zhao", runtime: 108 },
   { id: 61, title: "Dune", year: 2021, genre: "Sci-Fi", rating: 8.0, budget: 165, revenue: 401.8, director: "Denis Villeneuve", runtime: 155 },
   { id: 62, title: "The Batman", year: 2022, genre: "Action", rating: 7.9, budget: 185, revenue: 770.8, director: "Matt Reeves", runtime: 176 },
   { id: 63, title: "Everything Everywhere All at Once", year: 2022, genre: "Action", rating: 8.0, budget: 25, revenue: 103.1, director: "Daniel Kwan", runtime: 139 },
   { id: 64, title: "Top Gun: Maverick", year: 2022, genre: "Action", rating: 8.3, budget: 170, revenue: 1486.7, director: "Joseph Kosinski", runtime: 130 },
-  { id: 65, title: "Oppenheimer", year: 2023, genre: "Biography", rating: 8.5, budget: 100, revenue: 950.2, director: "Christopher Nolan", runtime: 180 },
-  { id: 66, title: "Barbie", year: 2023, genre: "Comedy", rating: 7.0, budget: 145, revenue: 1446.2, director: "Greta Gerwig", runtime: 114 }
+  { id: 65, title: "Oppenheimer", year: 2023, genre: "Biography", rating: 8.5, budget: 100, revenue: 950.2, director: "Christopher Nolan", runtime: 180 }
 ];
 
 const COLORS = ['#2563eb', '#7c3aed', '#dc2626', '#f59e0b', '#10b981', '#6366f1'];
@@ -79,6 +78,8 @@ const MovieExplorerDashboard = () => {
   const [genreFilter, setGenreFilter] = useState('All');
   const [yearRange, setYearRange] = useState([1970, 2025]);
   const [ratingFilter, setRatingFilter] = useState(8.0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const moviesPerPage = 10;
 
   const filteredMovies = useMemo(() => {
     return mockMovies.filter(movie => {
@@ -287,20 +288,63 @@ const MovieExplorerDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredMovies.map(movie => (
-                    <tr 
-                      key={movie.id} 
-                      onClick={() => setSelectedMovie(movie)}
-                      className="border-b hover:bg-gray-50 cursor-pointer transition-colors"
-                    >
-                      <td className="py-2">{movie.title}</td>
-                      <td className="py-2">{movie.year}</td>
-                      <td className="py-2">{movie.rating}</td>
-                      <td className="py-2">{movie.genre}</td>
-                    </tr>
+                  {filteredMovies
+                    .slice((currentPage - 1) * moviesPerPage, currentPage * moviesPerPage)
+                    .map(movie => (
+                      <tr 
+                        key={movie.id} 
+                        onClick={() => setSelectedMovie(movie)}
+                        className="border-b hover:bg-gray-50 cursor-pointer transition-colors"
+                      >
+                        <td className="py-2">{movie.title}</td>
+                        <td className="py-2">{movie.year}</td>
+                        <td className="py-2">{movie.rating}</td>
+                        <td className="py-2">{movie.genre}</td>
+                      </tr>
                   ))}
                 </tbody>
               </table>
+              
+              {/* Pagination Controls */}
+              <div className="flex items-center justify-between mt-4 pt-3 border-t">
+                <div className="text-sm text-gray-600">
+                  Showing {Math.min(filteredMovies.length, 10)} of {filteredMovies.length} movies
+                </div>
+                <div className="flex space-x-2">
+                  <button 
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className={`p-2 rounded-full ${currentPage === 1 
+                      ? 'text-gray-400 cursor-not-allowed' 
+                      : 'text-blue-600 hover:bg-blue-100'}`}
+                    aria-label="Previous Page"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  
+                  <span className="px-3 py-1 bg-gray-100 rounded-md text-sm">
+                    {currentPage} / {Math.ceil(filteredMovies.length / moviesPerPage)}
+                  </span>
+                  
+                  <button 
+                    onClick={() => setCurrentPage(prev => 
+                      prev < Math.ceil(filteredMovies.length / moviesPerPage) ? prev + 1 : prev
+                    )}
+                    disabled={currentPage >= Math.ceil(filteredMovies.length / moviesPerPage)}
+                    className={`p-2 rounded-full ${
+                      currentPage >= Math.ceil(filteredMovies.length / moviesPerPage)
+                        ? 'text-gray-400 cursor-not-allowed' 
+                        : 'text-blue-600 hover:bg-blue-100'}`}
+                    aria-label="Next Page"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -346,14 +390,37 @@ const MovieExplorerDashboard = () => {
                 />
                 <YAxis 
                   dataKey="y" 
-                  name="Rating" 
+                  name="Rating"
                   domain={[7, 10]} 
                   tickCount={7}
                 />
                 <Tooltip 
                   cursor={{ strokeDasharray: '3 3' }}
-                  formatter={(value, name) => [value, name === "y" ? "Rating" : "Runtime (min)"]}
-                  labelFormatter={(value) => `Movie: ${value}`}
+                  formatter={(value, name, props) => {
+                    if (name === "x") return [`${value} min`, "Runtime"];
+                    if (name === "y") return [value, "Rating"];
+                    return [value, name];
+                  }}
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    borderRadius: '6px',
+                    padding: '8px 12px',
+                    border: '1px solid #e2e8f0',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                  }}
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-white p-2 border border-gray-200 shadow-md rounded-md">
+                          <p className="font-bold text-gray-900 mb-1">{data.title}</p>
+                          <p className="text-sm">Runtime: <span className="font-semibold">{data.x} min</span></p>
+                          <p className="text-sm">Rating: <span className="font-semibold">{data.y}</span></p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
                 />
                 <Scatter 
                   name="Movies" 
