@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, LineChart, Line, ScatterChart, Scatter, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Film, Info, Search, Calendar, DollarSign, Star } from 'lucide-react';
 
-// Mock movie dataset
 const mockMovies = [
   { id: 1, title: "The Shawshank Redemption", year: 1994, genre: "Drama", rating: 9.3, budget: 25, revenue: 28.3, director: "Frank Darabont", runtime: 142 },
   { id: 2, title: "The Godfather", year: 1972, genre: "Crime", rating: 9.2, budget: 6, revenue: 246.1, director: "Francis Ford Coppola", runtime: 175 },
@@ -21,7 +20,6 @@ const mockMovies = [
   { id: 15, title: "The Lion King", year: 1994, genre: "Animation", rating: 8.5, budget: 45, revenue: 968.5, director: "Roger Allers", runtime: 88 }
 ];
 
-// Color palette
 const COLORS = ['#2563eb', '#7c3aed', '#dc2626', '#f59e0b', '#10b981', '#6366f1'];
 
 const MovieExplorerDashboard = () => {
@@ -31,7 +29,6 @@ const MovieExplorerDashboard = () => {
   const [yearRange, setYearRange] = useState([1970, 2025]);
   const [ratingFilter, setRatingFilter] = useState(8.0);
 
-  // Filtered movies based on user selections
   const filteredMovies = useMemo(() => {
     return mockMovies.filter(movie => {
       const genreMatch = genreFilter === 'All' || movie.genre === genreFilter;
@@ -41,7 +38,6 @@ const MovieExplorerDashboard = () => {
     });
   }, [genreFilter, yearRange, ratingFilter]);
 
-  // Genre distribution data
   const genreData = useMemo(() => {
     const genreCounts = filteredMovies.reduce((acc, movie) => {
       acc[movie.genre] = (acc[movie.genre] || 0) + 1;
@@ -50,7 +46,6 @@ const MovieExplorerDashboard = () => {
     return Object.entries(genreCounts).map(([genre, count]) => ({ genre, count }));
   }, [filteredMovies]);
 
-  // Year distribution data
   const yearData = useMemo(() => {
     const yearGroups = {};
     filteredMovies.forEach(movie => {
@@ -63,7 +58,6 @@ const MovieExplorerDashboard = () => {
     })).sort((a, b) => a.decade.localeCompare(b.decade));
   }, [filteredMovies]);
 
-  // Budget vs Revenue data
   const budgetRevenueData = filteredMovies.map(movie => ({
     title: movie.title,
     budget: movie.budget,
@@ -72,7 +66,6 @@ const MovieExplorerDashboard = () => {
     rating: movie.rating
   }));
 
-  // Rating vs Runtime scatter data
   const ratingRuntimeData = filteredMovies.map(movie => ({
     x: movie.runtime,
     y: movie.rating,
@@ -229,7 +222,7 @@ const MovieExplorerDashboard = () => {
       {/* Main Content */}
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Movie Data Table */}
+          {/* Movie Table */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-800">Movie Database</h2>
             <div className="overflow-x-auto">
@@ -286,7 +279,7 @@ const MovieExplorerDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Rating vs Runtime Scatter */}
+          {/* Rating vs Runtime Scatter Plot */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-800">Rating vs Runtime</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -383,7 +376,7 @@ const MovieExplorerDashboard = () => {
             </ResponsiveContainer>
           </div>
 
-          {/* Rating Trends Over Time */}
+          {/* Rating Trends */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold mb-4 text-gray-800">Average Rating Trends</h2>
             <ResponsiveContainer width="100%" height={300}>
